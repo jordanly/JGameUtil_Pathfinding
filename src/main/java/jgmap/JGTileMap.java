@@ -10,7 +10,7 @@ import java.util.Map;
 public class JGTileMap {
     private JGEngineInterface engine;
     private JGPoint[][] tileMap;
-    private Map<Integer, Integer> costMap;
+    private Map<Integer, Integer> costMap; // TODO: make an edge set and edge class?
 
     public JGTileMap(JGEngineInterface engine) {
         this(engine, null);
@@ -43,6 +43,12 @@ public class JGTileMap {
         }
     }
 
+    /**
+     * Get the indexes of the direct neighbors (no diagonals) of the given tile.
+     *
+     * @param tile The tile index you want the neighbors of
+     * @return A list of indexes of the neighboring tiles
+     */
     public List<JGPoint> getNeighbors(JGPoint tile) {
         List<JGPoint> neighbors = new ArrayList<JGPoint>();
 
@@ -61,7 +67,24 @@ public class JGTileMap {
         return neighbors;
     }
 
+    /**
+     * Get the cost of moving from the source tile to the target tile. Tiles should be adjacent.
+     *
+     * @param source
+     * @param target
+     * @return
+     */
     public int getCostToMove(JGPoint source, JGPoint target) {
-        return 1; // TODO: Change to use map to check cost
+        return 1; // TODO: Change to use map to check cost? or edge set
+    }
+
+    /**
+     * Test Method, to be removed
+     *
+     * @param tile
+     * @param image
+     */
+    public void setTile(JGPoint tile, String image) {
+        engine.setTile(tile, image);
     }
 }

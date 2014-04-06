@@ -5,6 +5,8 @@ import jgame.JGPoint;
 import jgame.platform.JGEngine;
 import jgame.platform.StdGame;
 import main.java.jgmap.JGTileMap;
+import main.java.jgpathfinder.JGPathfinder;
+import main.java.jgpathfinder.JGPathfinderInterface;
 
 public class TestEngine extends JGEngine {
     private JGTileMap tileMap;
@@ -27,7 +29,24 @@ public class TestEngine extends JGEngine {
         setFrameRate(45, 1);
         defineMedia("/main/resources/media.tbl");
         tileMap = new JGTileMap(this);
-        setTile(3, 4, "g");
+
+        for (int i = 0; i < pfTilesX(); i++) {
+            for (int j = 0; j < pfTilesY(); j++) {
+                setTile(i, j, "w");
+            }
+        }
+
+        JGPathfinderInterface finder = new JGPathfinder(new JGTileMap(this));
+        finder.getPath(new JGPoint(2, 4), new JGPoint(6, 9));
+    }
+
+    @Override
+    public void paintFrame() {
+        for (int i = 0; i < pfTilesX(); i++) {
+            for (int j = 0; j < pfTilesY(); j++) {
+                drawRect(i * tileWidth(), j * tileHeight(), tileWidth(), tileHeight(), false, false, 1, JGColor.black);
+            }
+        }
     }
 
     public static void main(String[] args) {
