@@ -36,7 +36,7 @@ public class TestEngine extends JGEngine {
             }
         }
 
-        JGPathfinderInterface finder = new JGPathfinder(new JGTileMap(this));
+        JGPathfinderInterface finder = new JGPathfinder(new JGTileMap(this), this);
         finder.getPath(new JGPoint(2, 4), new JGPoint(6, 9));
     }
 

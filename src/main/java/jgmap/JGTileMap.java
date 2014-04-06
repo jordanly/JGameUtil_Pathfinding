@@ -4,6 +4,7 @@ import jgame.JGPoint;
 import jgame.impl.JGEngineInterface;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,15 +53,15 @@ public class JGTileMap {
     public List<JGPoint> getNeighbors(JGPoint tile) {
         List<JGPoint> neighbors = new ArrayList<JGPoint>();
 
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                int neighborX = tile.x + i;
-                int neighborY = tile.y + j;
+        int[] xDirs = new int[]{0, 1, 0, -1};
+        int[] yDirs = new int[]{1, 0, -1, 0};
+        for (int i = 0; i < xDirs.length; i++) {
+            int neighborX = tile.x + xDirs[i];
+            int neighborY = tile.y + yDirs[i];
 
-                if ((neighborX < tileMap.length && neighborX > 0) &&
-                        (neighborY > tileMap[0].length && neighborY > 0)) {
-                    neighbors.add(tileMap[neighborX][neighborY]);
-                }
+            if ((neighborX < tileMap.length && neighborX > 0) &&
+                    (neighborY < tileMap[0].length && neighborY > 0)) {
+                neighbors.add(tileMap[neighborX][neighborY]);
             }
         }
 
