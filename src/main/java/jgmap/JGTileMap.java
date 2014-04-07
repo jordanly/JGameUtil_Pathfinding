@@ -8,7 +8,7 @@ import java.util.*;
 public class JGTileMap {
     private JGEngineInterface engine;
     private JGPoint[][] tileMap;
-    private Map<Integer, Integer> costMap; // TODO: make an edge set and edge class?
+    private Map<Integer, Integer> costMap;
     private Set<Integer> blockedCIDs;
 
     public JGTileMap(JGEngineInterface engine) {
