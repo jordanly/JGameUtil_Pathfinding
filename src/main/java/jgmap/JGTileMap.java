@@ -11,38 +11,35 @@ public class JGTileMap {
     private Map<Integer, Integer> costMap;
     private Set<Integer> blockedCIDs;
 
+    /**
+     * Create a tilemap with no costs to moving between tiles and no blocked tiles.
+     *
+     * @param engine The JGEngine used in the game
+     */
     public JGTileMap(JGEngineInterface engine) {
-        this(engine, null, null);
+        this(engine, new HashMap<Integer, Integer>(), new HashSet<Integer>());
     }
 
+    /**
+     * Create a tilemap with the specified costs to move between tiles in the costMap
+     * the blocked tile cids.
+     *
+     * @param engine The JGEngine used in the game
+     * @param costMap A map with the costs to move between given tiles
+     * @param blockedCIDs A set of blocked tile cids where the object cannot move to
+     */
     public JGTileMap(JGEngineInterface engine, Map<Integer, Integer> costMap, Set<Integer> blockedCIDs) {
         this.engine = engine;
+        this.costMap = costMap;
+        this.blockedCIDs = blockedCIDs;
 
-        if (costMap == null) {
-            this.costMap = new HashMap<Integer, Integer>();
-        }
-        else {
-            this.costMap = costMap;
-        }
-        if (blockedCIDs == null) {
-            this.blockedCIDs = new HashSet<Integer>();
-        }
-        else {
-            this.blockedCIDs = blockedCIDs;
-        }
-
-        try {
-            init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        init();
     }
 
-    private void init() throws Exception {
-        if (engine == null) {
-            throw new Exception("Null engine passed to JGTileMap"); // TODO: replace with real exception
-        }
-
+    /**
+     * Initializes the internal tilemap.
+     */
+    private void init() {
         int numXTiles = engine.pfTilesX();
         int numYTiles = engine.pfTilesY();
         tileMap = new JGPoint[numXTiles][numYTiles];
@@ -79,6 +76,12 @@ public class JGTileMap {
         return neighbors;
     }
 
+    /**
+     * Check if the given tile index is blocked from allowing movement.
+     *
+     * @param tile Tile to be checked if it is blocked
+     * @return Whether the tile is blocked
+     */
     private boolean isBlocked(JGPoint tile) {
         return blockedCIDs.contains(engine.getTileCid(tile.x, tile.y));
     }
@@ -92,15 +95,5 @@ public class JGTileMap {
      */
     public int getCostToMove(JGPoint source, JGPoint target) {
         return 1; // TODO: Change to use map to check cost? or edge set
-    }
-
-    /**
-     * Test Method, to be removed
-     *
-     * @param tile
-     * @param image
-     */
-    public void setTile(JGPoint tile, String image) {
-        engine.setTile(tile, image);
     }
 }

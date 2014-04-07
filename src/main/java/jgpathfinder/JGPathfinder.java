@@ -5,40 +5,36 @@ import jgame.impl.JGEngineInterface;
 import main.java.jgmap.JGTileMap;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.PriorityQueue;
 
 public class JGPathfinder implements JGPathfinderInterface {
     private JGEngineInterface engine;
+    private JGPathfinderHeuristicInterface pathfinderHeuristic;
     private JGTileMap tileMap;
-    private Node[][] nodeMap;
+    private NodeMap nodeMap;
 
-    public JGPathfinder(JGTileMap tileMap, JGEngineInterface engine) {
-        this.tileMap = tileMap;
+    public JGPathfinder(JGTileMap tileMap, JGPathfinderHeuristicInterface pathfinderHeuristic,
+                        JGEngineInterface engine) {
         this.engine = engine;
-
-        nodeMap = new Node[engine.pfTilesX()][engine.pfTilesY()];
-        for (int i = 0; i < engine.pfTilesX(); i++) {
-            for (int j = 0; j < engine.pfTilesY(); j++) {
-                nodeMap[i][j] = new Node(new JGPoint(i, j));
-            }
-        }
+        this.pathfinderHeuristic = pathfinderHeuristic;
+        this.tileMap = tileMap;
+        this.nodeMap = new NodeMap(engine);
     }
 
     @Override
     public JGPath getPath(JGPoint source, JGPoint target) {
         PriorityQueue<Node> open = new PriorityQueue<Node>();
         HashSet<Node> closed = new HashSet<Node>();
-        open.add(nodeMap[source.x][source.y]);
+        open.add(nodeMap.getNode(source));
 
         Node current = null;
-        while (open.peek() != null && open.peek() != nodeMap[target.x][target.y]) {
+        while (open.peek() != nodeMap.getNode(target) && open.size() > 0) {
             current = open.poll();
             closed.add(current);
 
             for (JGPoint n :  tileMap.getNeighbors(current.index)) {
-                Node neighbor = nodeMap[n.x][n.y];
-                tileMap.setTile(neighbor.index, "gr");
+                Node neighbor = nodeMap.getNode(n);
+                engine.setTile(neighbor.index, "gr");
                 double cost = current.pathCost + tileMap.getCostToMove(current.index, neighbor.index);
 
                 if (open.contains(neighbor) && cost < neighbor.pathCost) {
@@ -49,38 +45,49 @@ public class JGPathfinder implements JGPathfinderInterface {
                 }
                 if (!open.contains(neighbor) && !closed.contains(neighbor)) {
                     neighbor.pathCost = cost;
-                    neighbor.heuristicCost = getHeuristicCost(neighbor.index, target);
+                    neighbor.heuristicCost = pathfinderHeuristic.calculateHeuristicCost(neighbor.index, target);
                     open.add(neighbor);
                     neighbor.setParent(current);
                 }
             }
         }
 
+        if (open.peek() == null) {
+            return null; // No path exists, TODO: throw exception?
+        }
+
         JGPath path = new JGPath();
         current = open.poll();
         while (current.parent != null) {
             path.add(current.index);
-            tileMap.setTile(current.index, "y");
+            engine.setTile(current.index, "y");
             current = current.parent;
         }
 
-        tileMap.setTile(source, "g");
-        tileMap.setTile(target, "g");
+        engine.setTile(source, "g");
+        engine.setTile(target, "g");
 
         return path;
     }
 
-    private double getHeuristicCost(JGPoint source, JGPoint target) {
-        return distanceBetween(source, target); // TODO: closest heuristic, replace
-    }
+    private class NodeMap {
+        private Node[][] nodeMap;
 
-    private double distanceBetween(JGPoint source, JGPoint target) {
-        double dx = Math.abs(source.x - target.x);
-        double dy = Math.abs(source.y - target.y);
+        public NodeMap(JGEngineInterface engine) {
+            int numXTiles = engine.pfTilesX();
+            int numYTiles = engine.pfTilesY();
 
-        final double D = 1; // TODO: find wtf d should be
+            nodeMap = new Node[numXTiles][numYTiles];
+            for (int i = 0; i < numXTiles; i++) {
+                for (int j = 0; j < numYTiles; j++) {
+                    nodeMap[i][j] = new Node(new JGPoint(i, j));
+                }
+            }
+        }
 
-        return D * (dx + dy);
+        public Node getNode(JGPoint index) {
+            return nodeMap[index.x][index.y];
+        }
     }
 
     private class Node implements Comparable {

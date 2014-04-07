@@ -6,6 +6,7 @@ import jgame.platform.JGEngine;
 import jgame.platform.StdGame;
 import main.java.jgmap.JGTileMap;
 import main.java.jgpathfinder.JGPathfinder;
+import main.java.jgpathfinder.JGPathfinderHeuristic;
 import main.java.jgpathfinder.JGPathfinderInterface;
 
 import java.util.HashSet;
@@ -47,7 +48,8 @@ public class TestEngine extends JGEngine {
 
         Set<Integer> blocked = new HashSet<Integer>();
         blocked.add(1);
-        JGPathfinderInterface finder = new JGPathfinder(new JGTileMap(this, null, blocked), this);
+        JGPathfinderInterface finder = new JGPathfinder(new JGTileMap(this, null, blocked),
+                new JGPathfinderHeuristic(), this);
         finder.getPath(new JGPoint(1, 6), new JGPoint(7, 6));
     }
 
