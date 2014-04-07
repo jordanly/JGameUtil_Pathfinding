@@ -3,23 +3,33 @@ package main.java.jgmap;
 import jgame.JGPoint;
 import jgame.impl.JGEngineInterface;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JGTileMap {
     private JGEngineInterface engine;
     private JGPoint[][] tileMap;
     private Map<Integer, Integer> costMap; // TODO: make an edge set and edge class?
+    private Set<Integer> blockedCIDs;
 
     public JGTileMap(JGEngineInterface engine) {
-        this(engine, null);
+        this(engine, null, null);
     }
 
-    public JGTileMap(JGEngineInterface engine, Map<Integer, Integer> costMap) {
+    public JGTileMap(JGEngineInterface engine, Map<Integer, Integer> costMap, Set<Integer> blockedCIDs) {
         this.engine = engine;
-        this.costMap = costMap;
+
+        if (costMap == null) {
+            this.costMap = new HashMap<Integer, Integer>();
+        }
+        else {
+            this.costMap = costMap;
+        }
+        if (blockedCIDs == null) {
+            this.blockedCIDs = new HashSet<Integer>();
+        }
+        else {
+            this.blockedCIDs = blockedCIDs;
+        }
 
         try {
             init();
@@ -60,12 +70,17 @@ public class JGTileMap {
             int neighborY = tile.y + yDirs[i];
 
             if ((neighborX < tileMap.length && neighborX > 0) &&
-                    (neighborY < tileMap[0].length && neighborY > 0)) {
+                    (neighborY < tileMap[0].length && neighborY > 0) &&
+                    !isBlocked(tileMap[neighborX][neighborY])) {
                 neighbors.add(tileMap[neighborX][neighborY]);
             }
         }
 
         return neighbors;
+    }
+
+    private boolean isBlocked(JGPoint tile) {
+        return blockedCIDs.contains(engine.getTileCid(tile.x, tile.y));
     }
 
     /**

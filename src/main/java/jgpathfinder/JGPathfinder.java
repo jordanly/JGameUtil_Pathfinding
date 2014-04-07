@@ -57,6 +57,7 @@ public class JGPathfinder implements JGPathfinderInterface {
         }
 
         JGPath path = new JGPath();
+        current = open.poll();
         while (current.parent != null) {
             path.add(current.index);
             tileMap.setTile(current.index, "y");

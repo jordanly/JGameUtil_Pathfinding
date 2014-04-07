@@ -2,3 +2,4 @@ white	w	0	/main/resources/media/white-tile.png	-
 green	g	0	/main/resources/media/green-tile.png	-
 yellow	y	0	/main/resources/media/yellow-tile.png	-
 gray	gr	0	/main/resources/media/gray-tile.png		-
+black	b	1	/main/resources/media/black-tile.png	-

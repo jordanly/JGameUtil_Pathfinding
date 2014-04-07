@@ -8,6 +8,9 @@ import main.java.jgmap.JGTileMap;
 import main.java.jgpathfinder.JGPathfinder;
 import main.java.jgpathfinder.JGPathfinderInterface;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class TestEngine extends JGEngine {
     private JGTileMap tileMap;
 
@@ -36,8 +39,16 @@ public class TestEngine extends JGEngine {
             }
         }
 
-        JGPathfinderInterface finder = new JGPathfinder(new JGTileMap(this), this);
-        finder.getPath(new JGPoint(2, 4), new JGPoint(6, 9));
+        setTile(3, 4, "b");
+        setTile(3, 5, "b");
+        setTile(3, 6, "b");
+        setTile(3, 7, "b");
+        setTile(3, 8, "b");
+
+        Set<Integer> blocked = new HashSet<Integer>();
+        blocked.add(1);
+        JGPathfinderInterface finder = new JGPathfinder(new JGTileMap(this, null, blocked), this);
+        finder.getPath(new JGPoint(1, 6), new JGPoint(7, 6));
     }
 
     @Override
