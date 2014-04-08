@@ -11,6 +11,11 @@ public class JGPath {
         path = new LinkedList<JGPoint>();
     }
 
+    /**
+     * Add a point at the end of the path.
+     *
+     * @param point The point (tile index) to be added
+     */
     public void add(JGPoint point) {
         if (point == null) {
             return; // TODO: throw exception
@@ -19,15 +24,48 @@ public class JGPath {
         path.add(point);
     }
 
+    /**
+     * Add specified point to the beginning of the path.
+     *
+     * @param point Tile index to be added
+     */
+    public void addFirst(JGPoint point) {
+        if (point == null) {
+            return; // TODO: throw exception
+        }
+
+        path.addFirst(point);
+    }
+
+    /**
+     * Returns if the path has another point.
+     *
+     * @return If the path has another point
+     */
     public boolean hasNext() {
         return (path.peek() != null);
     }
 
+    /**
+     * Retrieves and removes, the next point of the path.
+     *
+     * @return The tile index of the next point in the path
+     */
     public JGPoint getNext() {
         if (!hasNext()) {
             return null; // TODO: throw exception
         }
 
         return path.poll();
+    }
+
+    /**
+     * Retrieves, but does not remove, the next point of the path. Returns
+     * null if there is no more points in the path.
+     *
+     * @return The tile index of the next point in the path
+     */
+    public JGPoint peek() {
+        return path.peek();
     }
 }

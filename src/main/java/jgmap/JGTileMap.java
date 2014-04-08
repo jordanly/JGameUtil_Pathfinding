@@ -66,8 +66,8 @@ public class JGTileMap {
             int neighborX = tile.x + xDirs[i];
             int neighborY = tile.y + yDirs[i];
 
-            if ((neighborX < tileMap.length && neighborX > 0) &&
-                    (neighborY < tileMap[0].length && neighborY > 0) &&
+            if ((neighborX < tileMap.length && neighborX >= 0) &&
+                    (neighborY < tileMap[0].length && neighborY >= 0) &&
                     !isBlocked(tileMap[neighborX][neighborY])) {
                 neighbors.add(tileMap[neighborX][neighborY]);
             }
