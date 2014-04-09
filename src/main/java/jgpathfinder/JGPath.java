@@ -11,6 +11,10 @@ public class JGPath {
         path = new LinkedList<JGPoint>();
     }
 
+    public JGPath(JGPath path) {
+        this.path = new LinkedList<JGPoint>(path.path);
+    }
+
     /**
      * Add a point at the end of the path.
      *

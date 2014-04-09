@@ -47,8 +47,8 @@ public class TestEngine extends JGEngine {
         tileMap = new JGTileMap(this);
         clearGrid();
 
-        startPoint = new JGPoint(10, 12); // default start point
-        endPoint = new JGPoint(15, 19); // default end point
+        startPoint = new JGPoint(12, 10); // default start point
+        endPoint = new JGPoint(24, 19); // default end point
 
         blocked = new HashSet<Integer>();
         blocked.add(1);
@@ -76,6 +76,13 @@ public class TestEngine extends JGEngine {
             }
         } else if (getKey(KeyEvent.VK_C)) {
             clearGrid();
+            clearObjects();
+        } else if (getKey(KeyEvent.VK_1)) {
+            startPoint = getTileIndex(getMouseX(), getMouseY());
+            setTile(startPoint.x, startPoint.y, "g");
+        } else if (getKey(KeyEvent.VK_2)) {
+            endPoint = getTileIndex(getMouseX(), getMouseY());
+            setTile(endPoint.x, endPoint.y, "g");
         }
 
         clearButtons();
@@ -99,8 +106,13 @@ public class TestEngine extends JGEngine {
         }
     }
 
+    private void clearObjects() {
+        removeObjects("TestObject", 2);
+    }
+
     private void clearButtons() {
         clearLastKey();
+        clearKey(KeyEvent.VK_SPACE);
         clearMouseButton(2);
         clearMouseButton(3);
     }
@@ -130,7 +142,7 @@ public class TestEngine extends JGEngine {
 
         public TestObject(JGPoint start, JGPath path) {
             super("TestObject", true, start.x, start.y, 2, null);
-            this.path = path;
+            this.path = new JGPath(path);
         }
 
         @Override
@@ -138,13 +150,16 @@ public class TestEngine extends JGEngine {
             if (path.peek() != null) {
                 JGPoint waypoint = toCenterOfTile(path.peek());
 
-                if ((int) x == waypoint.x && (int) y == waypoint.y) {
+                if (((int) (x + 5) >= waypoint.x && (int) (x - 5) <= waypoint.x) &&
+                        ((int) (y + 5) >= waypoint.y && (int) (y - 5) <= waypoint.y)) {
                     waypoint = path.getNext();
                 }
 
                 xdir = Double.compare(waypoint.x, x);
                 ydir = Double.compare(waypoint.y, y);
-                setDirSpeed(xdir, ydir, 1);
+                setDirSpeed(xdir, ydir, 2);
+            } else {
+                setSpeed(0);
             }
         }
 
