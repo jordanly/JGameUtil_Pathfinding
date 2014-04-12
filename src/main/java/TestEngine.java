@@ -68,6 +68,9 @@ public class TestEngine extends JGEngine {
 
             startTime = System.currentTimeMillis();
             path = finder.getPath(startPoint, endPoint);
+            path.paint(this);
+            setTile(startPoint.x, startPoint.y, "g");
+            setTile(endPoint.x, endPoint.y, "g");
             endTime = System.currentTimeMillis();
             System.out.println("The time to execute took " + (endTime - startTime) + " milliseconds");
         } else if (getKey(KeyEvent.VK_SPACE)) {

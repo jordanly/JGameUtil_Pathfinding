@@ -1,6 +1,7 @@
 package main.java.jgpathfinder;
 
 import jgame.JGPoint;
+import jgame.impl.JGEngineInterface;
 
 import java.util.LinkedList;
 
@@ -79,5 +80,11 @@ public class JGPath {
      */
     public JGPoint peek() {
         return path.peek();
+    }
+
+    public void paint(JGEngineInterface engine) {
+        for (JGPoint p : path) {
+            engine.setTile(p.x, p.y, "y");
+        }
     }
 }
