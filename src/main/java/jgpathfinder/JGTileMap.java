@@ -1,4 +1,4 @@
-package main.java.jgmap;
+package main.java.jgpathfinder;
 
 import jgame.JGPoint;
 import jgame.impl.JGEngineInterface;

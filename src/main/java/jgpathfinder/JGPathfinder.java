@@ -2,7 +2,6 @@ package main.java.jgpathfinder;
 
 import jgame.JGPoint;
 import jgame.impl.JGEngineInterface;
-import main.java.jgmap.JGTileMap;
 
 import java.util.HashSet;
 import java.util.PriorityQueue;
@@ -34,7 +33,6 @@ public class JGPathfinder implements JGPathfinderInterface {
 
             for (JGPoint n :  tileMap.getNeighbors(current.index)) {
                 Node neighbor = nodeMap.getNode(n);
-                engine.setTile(neighbor.index, "gr");
                 double cost = current.pathCost + tileMap.getCostToMove(current.index, neighbor.index);
 
                 if (open.contains(neighbor) && cost < neighbor.pathCost) {
@@ -60,12 +58,8 @@ public class JGPathfinder implements JGPathfinderInterface {
         current = open.poll();
         while (current.parent != null) {
             path.addFirst(current.index);
-            engine.setTile(current.index, "y");
             current = current.parent;
         }
-
-        engine.setTile(source, "g");
-        engine.setTile(target, "g");
 
         return path;
     }
@@ -85,6 +79,12 @@ public class JGPathfinder implements JGPathfinderInterface {
             }
         }
 
+        /**
+         * Get node associated with the given tile index.
+         *
+         * @param index Tile index to get the node of
+         * @return The Node object at the index
+         */
         public Node getNode(JGPoint index) {
             return nodeMap[index.x][index.y];
         }
