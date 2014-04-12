@@ -5,7 +5,7 @@ import jgame.JGObject;
 import jgame.JGPoint;
 import jgame.platform.JGEngine;
 import jgame.platform.StdGame;
-import main.java.jgmap.JGTileMap;
+import main.java.jgpathfinder.JGTileMap;
 import main.java.jgpathfinder.JGPath;
 import main.java.jgpathfinder.JGPathfinder;
 import main.java.jgpathfinder.JGPathfinderHeuristic;

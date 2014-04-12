@@ -7,10 +7,18 @@ import java.util.LinkedList;
 public class JGPath {
     private LinkedList<JGPoint> path;
 
+    /**
+     * Create a new, empty JGPath.
+     */
     public JGPath() {
         path = new LinkedList<JGPoint>();
     }
 
+    /**
+     * Create a new copy of the given path.
+     *
+     * @param path The path you want a copy of
+     */
     public JGPath(JGPath path) {
         this.path = new LinkedList<JGPoint>(path.path);
     }
