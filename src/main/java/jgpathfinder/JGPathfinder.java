@@ -1,15 +1,13 @@
 package main.java.jgpathfinder;
 
 import jgame.JGPoint;
-import jgame.impl.JGEngineInterface;
 
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
 public class JGPathfinder implements JGPathfinderInterface {
-    private JGEngineInterface engine;
     private JGPathfinderHeuristicInterface pathfinderHeuristic;
-    private JGTileMap tileMap;
+    private JGTileMapInterface tileMap;
     private NodeMap nodeMap;
 
     /**
@@ -18,14 +16,11 @@ public class JGPathfinder implements JGPathfinderInterface {
      * @param tileMap The tilemap to use to find a path
      * @param pathfinderHeuristic The heuristic used to calculate
      *                            the next tile to use.
-     * @param engine The engine being played on.
      */
-    public JGPathfinder(JGTileMap tileMap, JGPathfinderHeuristicInterface pathfinderHeuristic,
-                        JGEngineInterface engine) {
-        this.engine = engine;
+    public JGPathfinder(JGTileMapInterface tileMap, JGPathfinderHeuristicInterface pathfinderHeuristic) {
         this.pathfinderHeuristic = pathfinderHeuristic;
         this.tileMap = tileMap;
-        this.nodeMap = new NodeMap(engine);
+        this.nodeMap = new NodeMap(tileMap);
     }
 
     @Override
@@ -62,7 +57,7 @@ public class JGPathfinder implements JGPathfinderInterface {
             throw new NoPossiblePathException();
         }
 
-        JGPath path = new JGPath(engine);
+        JGPath path = new JGPath();
         current = open.poll();
         while (current.parent != null) {
             path.addFirst(current.index);
@@ -72,16 +67,21 @@ public class JGPathfinder implements JGPathfinderInterface {
         return path;
     }
 
+	/**
+	 * Private inner class that contains each node associated with a given
+	 * tile index. Each node in the node map corresponds with a given tile
+	 * in the tilemap.
+	 */
     private class NodeMap {
         private Node[][] nodeMap;
 
-        public NodeMap(JGEngineInterface engine) {
-            int numXTiles = engine.pfTilesX();
-            int numYTiles = engine.pfTilesY();
+        public NodeMap(JGTileMapInterface tileMap) {
+            int numXTiles = tileMap.getNumXTiles();
+            int numYTiles = tileMap.getNumYTiles();
 
             nodeMap = new Node[numXTiles][numYTiles];
             for (int i = 0; i < numXTiles; i++) {
-                for (int j = 0; j < numYTiles; j++) {
+                 for (int j = 0; j < numYTiles; j++) {
                     nodeMap[i][j] = new Node(new JGPoint(i, j));
                 }
             }
@@ -98,6 +98,10 @@ public class JGPathfinder implements JGPathfinderInterface {
         }
     }
 
+	/**
+	 * Private inner class that associates extra information with each tile index
+	 * that allows for pathfinding algorithms.
+	 */
     private class Node implements Comparable {
         private JGPoint index;
         private Node parent;
@@ -116,10 +120,6 @@ public class JGPathfinder implements JGPathfinderInterface {
 
         @Override
         public int compareTo(Object o) {
-            if (o == null || !(o instanceof Node)) {
-                return 0; // TODO: throw exception?
-            }
-
             Node target = (Node) o;
 
             double f = heuristicCost + pathCost;

@@ -5,11 +5,7 @@ import jgame.JGObject;
 import jgame.JGPoint;
 import jgame.platform.JGEngine;
 import jgame.platform.StdGame;
-import main.java.jgpathfinder.JGTileMap;
-import main.java.jgpathfinder.JGPath;
-import main.java.jgpathfinder.JGPathfinder;
-import main.java.jgpathfinder.JGPathfinderHeuristic;
-import main.java.jgpathfinder.JGPathfinderInterface;
+import main.java.jgpathfinder.*;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -19,7 +15,7 @@ import java.util.Set;
 public class TestEngine extends JGEngine {
     public static final String MEDIA_TBL_PATH = "/main/resources/media.tbl";
     private JGPath path;
-    private JGTileMap tileMap;
+    private JGTileMapInterface tileMap;
     private Set<Integer> blocked;
 
     private JGPoint startPoint;
@@ -64,11 +60,14 @@ public class TestEngine extends JGEngine {
         } else if (getMouseButton(MouseEvent.BUTTON3)) {
             clearOldPath();
             JGPathfinderInterface finder = new JGPathfinder(new JGTileMap(this, null, blocked),
-                    new JGPathfinderHeuristic(), this);
+                    new JGPathfinderHeuristic());
 
             startTime = System.currentTimeMillis();
-            path = finder.getPath(startPoint, endPoint);
-            path.paint(this);
+			try {
+				path = finder.getPath(startPoint, endPoint);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
             setTile(startPoint.x, startPoint.y, "g");
             setTile(endPoint.x, endPoint.y, "g");
             endTime = System.currentTimeMillis();
@@ -91,7 +90,14 @@ public class TestEngine extends JGEngine {
         clearButtons();
     }
 
-    private void clearOldPath() {
+	private void paintPath(JGPath path) {
+		for (JGPoint p : path) {
+			JGPoint coord = getTileCoord(p);
+			drawOval(coord.x + tileWidth()/2, coord.y + tileHeight()/2, 15, 15, true, true, 5, JGColor.red);
+		}
+	}
+
+	private void clearOldPath() {
         for (int i = 0; i < pfTilesX(); i++) {
             for (int j = 0; j < pfTilesY(); j++) {
                 if (getTileCid(i, j) != 1) {
@@ -123,6 +129,9 @@ public class TestEngine extends JGEngine {
     @Override
     public void paintFrame() {
         drawGrid();
+		if (path != null) {
+			paintPath(path);
+		}
     }
 
     private void drawGrid() {
