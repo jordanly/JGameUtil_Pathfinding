@@ -64,12 +64,10 @@ public class TestEngine extends JGEngine {
 
             startTime = System.currentTimeMillis();
 
-			for (int i = 0; i < 100; i++) {
-				try {
-					path = finder.getPath(startPoint, endPoint);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			try {
+				path = finder.getPath(startPoint, endPoint);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
             setTile(startPoint.x, startPoint.y, "g");
