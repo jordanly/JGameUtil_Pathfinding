@@ -33,7 +33,7 @@ public class TestEngine extends JGEngine {
 
     @Override
     public void initCanvas() {
-        setCanvasSettings(25, 20, 32, 32, null, JGColor.black, null);
+        setCanvasSettings(80, 60, 32, 32, null, JGColor.black, null);
     }
 
     @Override
@@ -63,11 +63,15 @@ public class TestEngine extends JGEngine {
                     new JGPathfinderHeuristic());
 
             startTime = System.currentTimeMillis();
-			try {
-				path = finder.getPath(startPoint, endPoint);
-			} catch (Exception e) {
-				e.printStackTrace();
+
+			for (int i = 0; i < 100; i++) {
+				try {
+					path = finder.getPath(startPoint, endPoint);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
+
             setTile(startPoint.x, startPoint.y, "g");
             setTile(endPoint.x, endPoint.y, "g");
             endTime = System.currentTimeMillis();

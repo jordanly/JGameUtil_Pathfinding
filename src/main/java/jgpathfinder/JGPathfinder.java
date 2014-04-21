@@ -25,7 +25,7 @@ public class JGPathfinder implements JGPathfinderInterface {
 
     @Override
     public JGPath getPath(JGPoint source, JGPoint target) throws NoPossiblePathException {
-        PriorityQueue<Node> open = new PriorityQueue<Node>();
+        OpenQueue<Node> open = new OpenQueue<Node>();
         HashSet<Node> closed = new HashSet<Node>();
         open.add(nodeMap.getNode(source));
 
@@ -66,6 +66,49 @@ public class JGPathfinder implements JGPathfinderInterface {
 
         return path;
     }
+
+	/**
+	 * Private inner class that represents the list of open nodes as a priority
+	 * queue for log(n) insertion and remove-best and a hash set for constant
+	 * time membership test.
+	 */
+	private class OpenQueue<E> {
+		private PriorityQueue<E> openQueue;
+		private HashSet<E> openSet;
+
+		public OpenQueue() {
+			openQueue = new PriorityQueue<E>();
+			openSet = new HashSet<E>();
+		}
+
+		public void add(E e) {
+			openQueue.add(e);
+			openSet.add(e);
+		}
+
+		public void remove(E e) {
+			openQueue.remove(e);
+			openSet.remove(e);
+		}
+
+		public E peek() {
+			return openQueue.peek();
+		}
+
+		public E poll() {
+			E e = openQueue.poll();
+			openSet.remove(e);
+			return e;
+		}
+
+		public boolean contains(E e) {
+			return openSet.contains(e);
+		}
+
+		public int size() {
+			return openSet.size();
+		}
+	}
 
 	/**
 	 * Private inner class that contains each node associated with a given
