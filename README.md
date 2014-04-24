@@ -15,6 +15,11 @@ holds the path found as a series of JGPoints that represent map tile indices.
 
 This package also provides a sample test engine that allows you to test and see this library.
 
+Requirements
+============
+
+This library needs JGame to function.
+
 Interfaces
 ==========
 
@@ -24,7 +29,7 @@ implementation and still have it compatible with other components. They are:
   -JGTileMapInterface: The tilemap representation of your game map. It will be aware of blocked tiles and 
   the cost of moving on certain tiles.
   
-  -JGPathfinderHeuristicInterface: The heuristic used in pahtfinding.
+  -JGPathfinderHeuristicInterface: The heuristic used in pathfinding.
   
   -JGPathfinderInterface: The actual pathfinder that uses the tilemap and heuristic provided to find a path
   between two points.
